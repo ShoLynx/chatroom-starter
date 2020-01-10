@@ -6,11 +6,16 @@ package edu.udacity.java.nano.chat;
 public class Message {
     // TODO: add message model.
     private String username;
-    private String message;
+    private String msg;
     private String type;
     private String onlineCount;
 
     public Message() {}
+
+    public String greeting(String name, Integer members) {
+        final String s = name + " has logged in.  There are " + members + " user(s) in this room.";
+        return s;
+    }
 
     public String getUsername() {
         return username;
@@ -20,12 +25,12 @@ public class Message {
         this.username = username;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getType() {

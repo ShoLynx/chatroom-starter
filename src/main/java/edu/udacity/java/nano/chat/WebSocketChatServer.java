@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.net.UnknownServiceException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +31,13 @@ public class WebSocketChatServer {
     private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
 
 
-    private static void sendMessageToAll(String msg) {
+    private static void sendMessageToAll(String msg) throws IOException {
         //TODO: add send message method.
-        //find out how to link users to sessions
-        // loop message sending process to all sessions in onlineSessions
+        //loop message sending process to all sessions in onlineSessions
         List<Session> sessionList = new ArrayList<Session>(onlineSessions.values());
         for (Session s: sessionList) {
-            //find sendMsg function
-            //find out how to incorporate this without scheduler
-            // public void sendAdhocMessages() {
-            //    template.convertAndSend("/topic/user", new Greeting("Scheduler"));
-            //}
+            onMessage(s, msg);
         }
-
-
     }
 
     /**
@@ -53,10 +46,8 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session) {
         //TODO: add on open connection.
-        //Add user's session to the session list
         onlineSessions.put("username", session);
         System.out.println("Now Connecting...");
-        //Use send all to send message (Message.username has entered the room)
         session = session;
     }
 
@@ -64,20 +55,25 @@ public class WebSocketChatServer {
      * Send message, 1) get username and session, 2) send message to all.
      */
     @OnMessage
-    public void onMessage(Session session, String jsonStr) {
+    @MessageMapping("/chat.send")
+    @SendTo("/topic/public")
+    public static void onMessage(Session session, String jsonStr) throws IOException {
         //TODO: add send message.
-        //use send all to send content
+        if (session.isOpen()) {
+            session.getBasicRemote().sendText(jsonStr);
+        }
+
     }
 
     /**
      * Close connection, 1) remove session, 2) update user.
      */
     @OnClose
-    public void onClose(Session session) {
+    @RequestMapping("/logout")
+    public void onClose(Session session) throws IOException {
         //TODO: add close connection.
-        //remove user from sessionList
+        session.close();
         onlineSessions.remove("username", session);
-
     }
 
     /**
