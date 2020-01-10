@@ -37,6 +37,7 @@
                     </div>
                     <div class="mdui-container" style="padding:20px 35px">
                         <!-- TODO: add a send button to send message -->
+                        <button class="mdui-btn mdui-color-theme mdui-ripple" id="send" type="submit">Send</button>
                         <button class="mdui-btn mdui-color-theme mdui-ripple"
                                 onclick="clearMsg()">Clear
                         </button>
@@ -56,8 +57,21 @@
                         <i class="mdui-icon material-icons">face</i></span>
                     <span class="mdui-chip-title">Online Users</span>
                     <!-- TODO: check online number num -->
+                    <span class="mdui-chip-title">${onlineCount}</span>
                 </div>
                 <!-- TODO: add a message container -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped" id="responses">
+                            <thead>
+                            <tr>
+                                <th>Messages</th>
+                            </tr>
+                            </thead>
+                            <tbody id="messages"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
         </div>
